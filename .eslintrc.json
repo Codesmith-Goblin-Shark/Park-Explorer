@@ -1,0 +1,24 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/test", "**/__tests__"],
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+	"globals": { "fetch": false , "document":false},
+  "extends": ["eslint:recommended"],
+	"parser":"@babel/eslint-parser",
+  "parserOptions": { "sourceType": "module" ,"requireConfigFile": false},
+	"plugins": [
+    "react-hooks"
+  ],
+  "rules": {
+    "indent": ["warn", 2],
+    "no-unused-vars": ["off", { "vars": "local" }],
+    "prefer-const": "warn",
+    "quotes": ["warn", "single"],
+    "space-infix-ops": "warn",
+		"react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn" // <--- THIS IS THE NEW RULE
+  }
+}

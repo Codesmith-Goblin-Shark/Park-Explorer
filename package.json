@@ -1,0 +1,67 @@
+{
+  "name": "adventure-map-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build-dev": "cross-env NODE_ENV=development && webpack --mode development",
+    "build-prod": "cross-env NODE_ENV=production && webpack --mode production",
+    "client": "cross-env NODE_ENV=development && webpack serve --hot --mode development",
+    "server": "nodemon server/server.js",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.5",
+    "@heroicons/react": "^1.0.5",
+    "@tailwindcss/forms": "^0.4.0",
+    "body-parser": "^1.19.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "pg": "^8.7.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hot-loader": "^4.13.0",
+    "react-icons": "^4.3.1",
+    "react-router-dom": "^6.2.1",
+    "tailwindcss": "^3.0.8"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/eslint-parser": "^7.5.4",
+    "@babel/plugin-transform-runtime": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.5",
+    "@hot-loader/react-dom": "^17.0.1+4.13.0",
+    "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
+    "concurrently": "^6.5.1",
+    "css-loader": "^6.5.1",
+    "eslint": "^8.5.0",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "node-sass": "^7.0.1",
+    "nodemon": "^2.0.15",
+    "postcss-loader": "^6.2.1",
+    "sass-loader": "^12.4.0",
+    "style-loader": "^3.3.1",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
