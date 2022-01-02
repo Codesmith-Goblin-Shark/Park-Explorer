@@ -5,7 +5,7 @@
     "node": true,
     "es2021": true
   },
-	"globals": { "fetch": false , "document":false},
+	"globals": { "fetch": false , "document": false, "window": false, "localStorage": false},
   "extends": ["eslint:recommended"],
 	"parser":"@babel/eslint-parser",
   "parserOptions": { "sourceType": "module" ,"requireConfigFile": false},

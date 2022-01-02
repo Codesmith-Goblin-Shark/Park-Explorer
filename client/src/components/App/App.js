@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Guest from './Guest/Guest';
 
 function App() {
 
@@ -33,8 +34,8 @@ function App() {
 
 
   return (
-    <div>
-      <button onClick={()=> handleClick()}>Click here</button>
+    <div className='flex flex-col min-h-screen'>
+      <Guest />
     </div>
   );
 }
