@@ -11,4 +11,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
+
+app.get('/park', (req, res) => {
+    res.json({park: res.locals.park})
+})
+
+app.get('*', (req, res) => {
+    res.sendStatus(404);
+})
+
+
+app.use((err, req, res, next) => {
+    const defaultErr = {
+        log: 'Express error handler caught unknown middleware error',
+        status: 400,
+        message: { err: 'An error occured'},
+    }
+
+    const errorObj = Object.assign(defaultErr, err);
+
+    res.status(errorObj.status).send(errorObj.message);
+})
+
+
 app.listen(port, () => console.log(`Listening on port ${port}.\nMake sure the postgres server is running.`));
