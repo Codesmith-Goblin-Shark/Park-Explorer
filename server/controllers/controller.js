@@ -4,7 +4,7 @@ const controller = {};
 
 controller.searchPark = async (req, res, next) => {
   try{
-    const {search} = req.body.search
+    const {search} = req.body.search;
     const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='${search}'`;
     // SELECT parks.park_name, parks.state_abbr, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='Maine'
     const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_abbrv='${search}'`;
