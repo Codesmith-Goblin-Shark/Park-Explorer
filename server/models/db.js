@@ -8,6 +8,7 @@ const pool = new Pool({
 
 // Schema for the database can be found below:
 // https://docs.google.com/spreadsheets/d/1cbGHavCOYNW9dGgxL1qengdcZUp_8MIkxhllcXzOsGM/edit#gid=0
+// or in the 'schema.sql' file 
 
 // We export an object that contains a property called query,
 // which is a function that returns the invocation of pool.query() after logging the query
@@ -16,6 +17,6 @@ const pool = new Pool({
 module.exports = {
   query: (text, params, callback) => {
     console.log('executed query', text);
-      return pool.query(text, params, callback);
+    return pool.query(text, params, callback);
   },
 };
