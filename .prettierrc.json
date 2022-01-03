@@ -9,5 +9,5 @@
 	"useEditorConfig": true,
 	"htmlWhitespaceSensitivity": "css",
 	"bracketSpacing": true,
-	"prettier.arrowParens": "always"
+	"arrowParens": "always"
 }
