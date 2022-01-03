@@ -4,34 +4,56 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3000;
- 
+const PORT = process.env.PORT || 3000;
+
+// require routers
+const parksRouter = require('./routes/parks');
+const loginRouter = require('./routes/login');
+const signupRouter = require('./routes/signup');
+const myParksRouter = require('./routes/myparks');
+const profileRouter = require('./routes/profile');
+const parkInfoRouter = require('./routes/parkinfo');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/', parksRouter);
+app.use('/login', loginRouter);
+app.use('/signup', signupRouter);
+app.use('/myparks', myParksRouter);
+app.use('/profile', profileRouter);
+app.use('/parks/:id', parkInfoRouter);
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'))
+  // res.render('home')
+});
 
-
-app.get('/park', (req, res) => {
-    res.json({park: res.locals.park})
-})
+// what is this one for? 
+// app.get('/park', (req, res) => {
+//   res.json({park: res.locals.park})
+// })
 
 app.get('*', (req, res) => {
-    res.sendStatus(404);
+  res.sendStatus(404)
 })
 
 
 app.use((err, req, res, next) => {
-    const defaultErr = {
-        log: 'Express error handler caught unknown middleware error',
-        status: 400,
-        message: { err: 'An error occured'},
-    }
+  const defaultErr = {
+    log: 'Express error handler caught unknown middleware error',
+    status: 500,
+    message: { err: 'An error occurred'},
+  }
 
-    const errorObj = Object.assign(defaultErr, err);
-
-    res.status(errorObj.status).send(errorObj.message);
+  const errorObj = Object.assign({}, defaultErr, err);
+  console.log(errorObj);
+  // should the method be send or json here like the commented out below
+  // res.status(errorObj.status).json(errorObj.message);
+  return res.status(errorObj.status).send(errorObj.message);
 })
 
 
-app.listen(port, () => console.log(`Listening on port ${port}.\nMake sure the postgres server is running.`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}.\nMake sure the postgres server is running.`));
+
+module.exports = app;
