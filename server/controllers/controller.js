@@ -3,26 +3,28 @@ const db = require('../models/db.js');
 const controller = {};
 
 controller.searchPark = async (req, res, next) => {
-  try{
-    const {search} = req.body;
-    const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='${search}'`;
+  // console.log('controller is hit')
+  try {
+    const park = req.params.park
+    // const {search} = req.body;
+    const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='${park}'`;
     // SELECT parks.park_name, parks.state_abbr, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='Maine'
-    const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_abbrv='${search}'`;
-    const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE parks.park_name='${search}'`;
-    let park = await db.query(queryOne);
-    if (!park) {
-      park = await db.query(queryTwo);
+    const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_abbr='${park}'`;
+    const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE parks.park_name LIKE'%${park}%'`;
+    let result = await db.query(queryOne);
+    if (result.rows.length === 0) {
+      result = await db.query(queryTwo);
     }
-    if (!park) {
-      park = await db.query(queryThree);
+    if (result.rows.length === 0) {
+      result = await db.query(queryThree);
     }
-    if (!park) {
+    if (result.rows.length === 0) {
       return next({
         log: 'searchPark middleware failed',
-        message: { err: 'Error querying from database' },
+        message: { err: `Could not find any national parks related to ${park}` },
       });
     }
-    res.locals.park = park;
+    res.locals.park = result.rows;
     next();
   }
   catch (err) {
