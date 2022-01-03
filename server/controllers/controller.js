@@ -4,7 +4,7 @@ const controller = {};
 
 controller.searchPark = async (req, res, next) => {
   try{
-    const {search} = req.body.search;
+    const {search} = req.body;
     const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='${search}'`;
     // SELECT parks.park_name, parks.state_abbr, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='Maine'
     const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_abbrv='${search}'`;
@@ -31,7 +31,7 @@ controller.searchPark = async (req, res, next) => {
 };
 
 controller.signupUser = async (req, res, next) => {
-  const {firstname, lastname, email, password} = req.body
+  const {firstname, lastname, email, password} = req.body;
   const query = {
     text: `INSERT INTO users(firstname, lastname, email, password) VALUES ($1, $2, $3, $4)`,
     values: [firstname, lastname, email, password]
