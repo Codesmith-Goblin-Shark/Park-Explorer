@@ -2,3 +2,6 @@ dist/*
 !dist/index.html
 node_modules/
 *.env
+*.sql
+server/models/schema.sql
+config/
