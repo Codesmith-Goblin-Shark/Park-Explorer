@@ -13,7 +13,7 @@
     "react-hooks"
   ],
   "rules": {
-    "indent": ["warn", 2],
+    // "indent": ["warn", 2],
     "no-unused-vars": ["off", { "vars": "local" }],
     "prefer-const": "warn",
     "quotes": ["warn", "single"],
