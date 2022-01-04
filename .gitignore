@@ -5,4 +5,5 @@ node_modules/
 *.sql
 server/models/schema.sql
 config/
+.vscode/
 server/models/db.js
