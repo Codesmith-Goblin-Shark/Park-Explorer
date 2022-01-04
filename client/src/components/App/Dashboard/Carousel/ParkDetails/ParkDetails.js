@@ -1,6 +1,5 @@
 import React from 'react';
 export default function ParkDetails({ park }) {
-  console.log(park);
   return (
     <>
       <span className='h-full text-xs flex flex-col items-center justify-center '>

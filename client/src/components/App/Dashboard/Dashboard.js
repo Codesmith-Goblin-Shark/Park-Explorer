@@ -12,7 +12,7 @@ export default function Dashboard() {
         const res = await fetch(url);
         // how is this .json method accessible when it isn't visible on the response object🤔😵
         const { data } = await res.json();
-        console.log(data);
+        // console.log(data);
         const nationalParks = data.filter((park) =>
           park.designation.includes('National Park')
         );
@@ -29,7 +29,7 @@ export default function Dashboard() {
     <>
       <div className='flex-grow flex bg-gray-50 dark:bg-gray-800'>
         <div className='grow mx-60 mb-60 mt-15 py-12 px-8 sm:px-10 lg:py-18 lg:px-8 lg:items-center lg:justify-between'>
-          <Search />
+          <Search data={parks} />
           <div className='w-full flex justify-center'>
             {parks && <Carousel data={parks} />}
           </div>

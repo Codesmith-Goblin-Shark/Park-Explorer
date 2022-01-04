@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-export default function NewAccountForm() {
+export default function SignInForm() {
   const history = useNavigate();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const addUser = async () => {
+  const signinUser = async () => {
     try {
       const res = await fetch('/api/users/new', {
         method: 'POST',
@@ -55,34 +54,6 @@ export default function NewAccountForm() {
               placeholder='Email address'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='firstName' className='sr-only'>
-              First Name
-            </label>
-            <input
-              id='firstName'
-              type='text'
-              required
-              className='appearance-none rounded-none relative block w-full px-3 py-2 border dark:bg-gray-700 border-gray-300 dark:border-gray-600 dark:placeholder-gray-500 placeholder-gray-500 dark:text-gray-100 text-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm'
-              placeholder='First name'
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='lastName' className='sr-only'>
-              Last Name
-            </label>
-            <input
-              id='lastName'
-              type='text'
-              required
-              className='appearance-none rounded-none relative block w-full px-3 py-2 border dark:bg-gray-700 border-gray-300 dark:border-gray-600 dark:placeholder-gray-500 placeholder-gray-500 dark:text-gray-100 text-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm'
-              placeholder='Last name'
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <div>

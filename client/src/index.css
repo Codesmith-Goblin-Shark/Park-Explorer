@@ -27,6 +27,15 @@ body {
     -0.1rem 0.1rem 0 #000, 0.1rem 0.1rem 0 #000;
 }
 
+img.h-full.mx-auto {
+  box-shadow: 2px 2px 26px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+
+span .block {
+  color: #743100;
+}
+
 .emoji {
   color: transparent;
   /* background-color: transparent; */
