@@ -18,7 +18,7 @@ require('../config/passport.js')(passport)
 // const loginRouter = require('./routes/login');
 const signupRouter = require('./routes/signup');
 const myParksRouter = require('./routes/myparks');
-// const profileRouter = require('./routes/profile');
+const profileRouter = require('./routes/profile');
 // const parkInfoRouter = require('./routes/parkinfo');
 
 app.use(bodyParser.json());
@@ -28,10 +28,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use('/login', loginRouter);
 app.use('/api/users/new', signupRouter);
 app.use('/myparks', myParksRouter);
-// app.use('/profile', profileRouter);
+app.use('/api/users', profileRouter);
 // app.use('/parks/:id', parkInfoRouter);
-
-
 
 
 app.get('/', (req, res) => {
