@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  background-color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+body {
+  background-color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.carousel {
+  display: inline-flex;
+  overflow-x: hidden;
+  /*  scroll snap is a great feature which will center the image on snap on touch screen devices  */
+  scroll-snap-type: x mandatory;
+  /* all below will hide the scrollbar on all browsers.    */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.outlineText {
+  color: white;
+  text-shadow: -0.1rem -0.1rem 0 #000, 0.1rem -0.1rem 0 #000,
+    -0.1rem 0.1rem 0 #000, 0.1rem 0.1rem 0 #000;
+}
+
+.emoji {
+  color: transparent;
+  /* background-color: transparent; */
+  text-shadow: 0 0 0;
+}
+
+.max-h-192 {
+  max-height: 48rem;
+}
+.max-h-384 {
+  max-height: 96rem;
+}
+
+.max-w-192 {
+  max-width: 48rem;
+}
