@@ -32,7 +32,6 @@ export default function AppRouter() {
           </ThemeProvider>
         </BrowserRouter>
       </isLoggedInContext.Provider>
-      ;
     </>
   );
 }

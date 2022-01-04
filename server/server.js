@@ -6,9 +6,17 @@ const dotenv = require('dotenv');
 const passport = require('passport');
 const session = require('express-session');
 const db = require('./models/db.js');
+const cors = require('cors');
+
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors(corsOptions));
 
 //Passport config
 require('../config/passport.js')(passport);
@@ -26,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.use('/', parksRouter);
 app.use('/login', loginRouter);
-app.use('/api/users/new', signupRouter);
+app.use('/users/new', signupRouter);
 app.use('/myparks', myParksRouter);
 app.use('/api/users', profileRouter);
 // app.use('/parks/:id', parkInfoRouter);

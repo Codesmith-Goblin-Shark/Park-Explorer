@@ -9,7 +9,7 @@ export default function NewAccountForm() {
 
   const addUser = async () => {
     try {
-      const res = await fetch('/api/users/new', {
+      const res = await fetch('http://localhost:3000/users/new', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
