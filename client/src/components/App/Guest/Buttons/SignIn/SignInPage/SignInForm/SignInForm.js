@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-export default function NewAccountForm() {
-  const history = useNavigate();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+import isLoggedInContext from '../../../../../../Context/isLoggedInContext';
+export default function SignInForm() {
+  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(isLoggedInContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const addUser = async () => {
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log(isLoggedIn);
+  const getUser = async () => {
     try {
-      const res = await fetch('/api/users/new', {
+      const res = await fetch('/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          firstName,
-          lastName,
           email,
           password,
         }),
-      });
+      }).then((data) => data.json());
       if (res.status !== 200) throw new Error(res.status);
       return res;
     } catch (error) {
@@ -30,15 +29,31 @@ export default function NewAccountForm() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addUser({ firstName, lastName, email, password });
-    history.push('/dashboard');
+  const handleSubmit = async () => {
+    // e.preventDefault();
+    const res = await getUser();
+    if (res.isLoggedIn) {
+      // history.push('/dashboard');
+      setIsLoggedIn(true);
+      // navigate('/dashboard');
+    }
+  };
+
+  const isUserValid = async () => {
+    try {
+      const res = await getUser();
+      console.log(res);
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log('error in isUserValid: ', error);
+    }
+    // if (data)
   };
 
   return (
     <>
-      <form className='mt-8 space-y-6' onSubmit={() => handleSubmit()}>
+      <form className='mt-8 space-y-6'>
         <input type='hidden' name='remember' defaultValue='true' />
         <div className='rounded-md shadow-sm -space-y-px'>
           <div>
@@ -55,34 +70,6 @@ export default function NewAccountForm() {
               placeholder='Email address'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='firstName' className='sr-only'>
-              First Name
-            </label>
-            <input
-              id='firstName'
-              type='text'
-              required
-              className='appearance-none rounded-none relative block w-full px-3 py-2 border dark:bg-gray-700 border-gray-300 dark:border-gray-600 dark:placeholder-gray-500 placeholder-gray-500 dark:text-gray-100 text-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm'
-              placeholder='First name'
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='lastName' className='sr-only'>
-              Last Name
-            </label>
-            <input
-              id='lastName'
-              type='text'
-              required
-              className='appearance-none rounded-none relative block w-full px-3 py-2 border dark:bg-gray-700 border-gray-300 dark:border-gray-600 dark:placeholder-gray-500 placeholder-gray-500 dark:text-gray-100 text-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm'
-              placeholder='Last name'
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <div>
@@ -124,21 +111,22 @@ export default function NewAccountForm() {
         {/* </div> */}
 
         <div>
-          {email && firstName && lastName && password ? (
+          {/* {email && password ? (
             <Link
-              to='/dashboard'
+              to='/dashboard' // favorites ideally
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
             >
               Submit
             </Link>
-          ) : (
-            <button
-              type='submit'
-              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
-            >
-              Submit
-            </button>
-          )}
+          ) : ( */}
+          <button
+            onClick={() => handleSubmit()}
+            className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
+            // handlesubmit='(e) => e.preventDefault();'
+          >
+            Submit
+          </button>
+          {/* )} */}
         </div>
       </form>
     </>

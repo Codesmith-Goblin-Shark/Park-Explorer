@@ -1,6 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-export default function Search() {
+export default function Search({ data }) {
+  // const getUser = async () => {
+  //   try {
+  //     const res = await fetch('/login', {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         email,
+  //         password,
+  //       }),
+  //     }).then((data) => data.json());
+  //     if (res.status !== 200) throw new Error(res.status);
+  //     return res;
+  //   } catch (error) {
+  //     throw new Error(
+  //       `There was an issue adding the member to the database. ${error}`
+  //     );
+  //   }
+  // };
+
   return (
     <div>
       <label

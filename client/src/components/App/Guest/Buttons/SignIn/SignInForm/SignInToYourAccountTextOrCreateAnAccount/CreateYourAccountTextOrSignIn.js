@@ -15,7 +15,7 @@ export default function CreateYourAccountTextOrSignIn() {
         <p className='mt-2 text-center text-sm text-gray-600'>
           Or{' '}
           <Link
-            to='/sign+in'
+            to='/'
             className='font-medium text-yellow-600 hover:text-yellow-500'
           >
             Sign in
