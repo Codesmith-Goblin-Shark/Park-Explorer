@@ -6,7 +6,7 @@ export default function CreateAccount() {
       <div className='inline-flex rounded-md shadow'>
         <Link
           to='/new+user'
-          className='inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:md:hover:bg-indigo-900'
+          className='inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-50 bg-yellow-600 dark:bg-yellow-600 hover:bg-yellow-700 dark:md:hover:bg-yellow-800'
         >
           Create Account
         </Link>
