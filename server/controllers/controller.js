@@ -33,19 +33,90 @@ controller.searchPark = async (req, res, next) => {
 };
 
 controller.signupUser = async (req, res, next) => {
-  const {firstname, lastname, email, password} = req.body;
-  const query = {
-    text: `INSERT INTO users(firstname, lastname, email, password) VALUES ($1, $2, $3, $4)`,
-    values: [firstname, lastname, email, password]
-  };
-  res.locals.park = await db.query(query);
-  if (!res.locals.park) {
-    return next({
-      log: 'getPark middleware failed',
-      message: { err: 'Error querying from database' },
-    });
+  console.log('signupUser controller is hit');
+  try {
+    // INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ('amy', 'liang', 'abc@gmail.com', 'test');
+    const {firstname, lastname, email, password} = req.body;
+    // const query = {
+    //   text: `INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ($1, $2, $3, $4)`,
+    //   values: [firstname, lastname, email, password]
+    // };
+    const query = `INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ('${firstname}', '${lastname}', '${email}', '${password}')`;
+    const newUser = await db.query(query);
+    // console.log(res.locals.newUser);
+    if (!newUser.command) {
+      return next({
+        log: 'signupUser middleware failed',
+        message: { err: 'Error signing up for a new account' },
+      });
+    }
+    res.locals.newUser = newUser;
+    next();
   }
-  next();
+  catch (err){
+    res.sendStatus(400).json(err);
+  }
+};
+
+controller.addFav = async (req, res, next) => {
+  try {
+    const park = req.params.park;
+    const email = req.params.email;
+    const queryOne = `SELECT users.id FROM users WHERE email='${email}'`;
+    // const queryTwo = `SELECT parks.id, parks.park_name FROM parks WHERE park_name='${park}'`;
+    const queryTwo = `SELECT parks.park_name FROM parks WHERE park_name='${park}'`;
+    
+    const resultOne = await db.query(queryOne);
+    const resultTwo = await db.query(queryTwo);
+
+    // const queryThree = `INSERT INTO user_parks (user_id, parks_id) VALUES('${resultOne.rows[0].id}', '${resultTwo.rows[0].id}')`;
+    const queryThree = `INSERT INTO user_parks (user_id, park_name) VALUES('${resultOne.rows[0].id}', '${resultTwo.rows[0].park_name}')`;
+    
+    const resultThree = await db.query(queryThree);
+    // console.log(res.locals.newUser);
+    // if (!newUser.command) {
+    //   return next({
+    //     log: 'signupUser middleware failed',
+    //     message: { err: 'Error signing up for a new account' },
+    //   });
+    // }
+    res.locals.fav = resultThree;
+    next();
+  }
+  catch (err){
+    res.sendStatus(400).json(err);
+  }
+};
+
+
+controller.deleteFav = async (req, res, next) => {
+  try {
+    const park = req.params.park;
+    const email = req.params.email;
+    const queryOne = `SELECT users.id FROM users WHERE email='${email}'`;
+    // const queryTwo = `SELECT parks.id, parks.park_name FROM parks WHERE park_name='${park}'`;
+    const queryTwo = `SELECT parks.park_name FROM parks WHERE park_name='${park}'`;
+    
+    const resultOne = await db.query(queryOne);
+    const resultTwo = await db.query(queryTwo);
+
+    // const queryThree = `INSERT INTO user_parks (user_id, parks_id) VALUES('${resultOne.rows[0].id}', '${resultTwo.rows[0].id}')`;
+    const queryThree = `DELETE FROM user_parks WHERE user_id='${resultOne.rows[0].id}' AND park_name='${resultTwo.rows[0].park_name}'`;
+    
+    const resultThree = await db.query(queryThree);
+    // console.log(res.locals.newUser);
+    // if (!newUser.command) {
+    //   return next({
+    //     log: 'signupUser middleware failed',
+    //     message: { err: 'Error signing up for a new account' },
+    //   });
+    // }
+    res.locals.deleted = resultThree;
+    next();
+  }
+  catch (err){
+    res.sendStatus(400).json(err);
+  }
 };
 
 module.exports = controller;

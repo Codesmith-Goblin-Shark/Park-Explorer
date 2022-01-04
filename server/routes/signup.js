@@ -3,8 +3,9 @@ const router = express.Router();
 
 const controller = require('../controllers/controller.js')
 
-router.post('/', async (req, res) => {
-    res.status(200).json({user: res.locals.signup})
+router.get('/',controller.signupUser, async (req, res) => {
+    console.log('in signup.js router')
+    res.status(200).json({user: res.locals.newUser})
 });
 
 module.exports = router;
