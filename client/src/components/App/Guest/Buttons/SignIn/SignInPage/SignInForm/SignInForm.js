@@ -111,22 +111,22 @@ export default function SignInForm() {
         {/* </div> */}
 
         <div>
-          {/* {email && password ? (
+          {email && password ? (
             <Link
               to='/dashboard' // favorites ideally
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
             >
               Submit
             </Link>
-          ) : ( */}
-          <button
-            onClick={() => handleSubmit()}
-            className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
-            // handlesubmit='(e) => e.preventDefault();'
-          >
-            Submit
-          </button>
-          {/* )} */}
+          ) : (
+            <button
+              onClick={() => handleSubmit()}
+              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
+              // handlesubmit='(e) => e.preventDefault();'
+            >
+              Submit
+            </button>
+          )}
         </div>
       </form>
     </>
