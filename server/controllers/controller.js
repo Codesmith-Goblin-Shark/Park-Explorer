@@ -7,10 +7,10 @@ controller.searchPark = async (req, res, next) => {
   try {
     const park = req.params.park;
     // const {search} = req.body;
-    const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='${park}'`;
+    const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_name)='${park}' OR (states.state_name)='${park}'`;
     // SELECT parks.park_name, parks.state_abbr, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='Maine'
-    const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_abbr='${park}'`;
-    const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE parks.park_name LIKE'%${park}%'`;
+    const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_abbr)='${park}' OR (states.state_abbr)='${park}'`;
+    const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(parks.park_name) LIKE'%${park}%' OR (parks.park_name)='%${park}%'`;
     let result = await db.query(queryOne);
     if (result.rows.length === 0) {
       result = await db.query(queryTwo);
