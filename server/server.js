@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors(corsOptions));
 
 //Passport config
-require('../config/passport.js')(passport);
+// require('../config/passport.js')(passport);
 
 // require routers
 // const parksRouter = require('./routes/parks');
