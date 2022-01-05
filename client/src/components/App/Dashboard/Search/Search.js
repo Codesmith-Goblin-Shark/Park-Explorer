@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 export default function Search({ handleClick, search, setSearch }) {
-  // const [state, setState] = useState('');
+  const [state, setState] = useState('');
 
   // const handleClick = (e) => {
   //   getUser();
@@ -27,10 +27,10 @@ export default function Search({ handleClick, search, setSearch }) {
         />
         <button
           onClick={() => handleClick(search)}
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   handleClick(state);
-          // }}
+          onClick={(e) => {
+            e.preventDefault();
+            handleClick(state);
+          }}
           className='flex-1 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
         >
           Search

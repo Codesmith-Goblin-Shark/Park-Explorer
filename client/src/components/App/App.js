@@ -3,7 +3,7 @@ import Guest from './Guest/Guest';
 
 function App() {
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className='flex justify-content: space-between min-h-screen'>
       {/* {isLoggedIn ? <Favorites /> : <Guest />} */}
       <Guest />
     </div>
