@@ -7,7 +7,7 @@ import ParkName from './ParkName/ParkName';
 export default function Carousel({ data }) {
   const [currentImage, setCurrentImage] = useState(0);
   const [parkDetails, setParkDetails] = useState(data[0]);
-  const images = data.map((el) => el.images[0].url);
+  const images = data.map((el) => el.images[0].url);  
 
   useEffect(() => {
     // only update state once in a child component (carousel) when that state is based on props from a parent component (dashboard's fetch to the API), useEffect is the key with the data as a dependency

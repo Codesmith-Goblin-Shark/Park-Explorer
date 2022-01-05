@@ -1,5 +1,5 @@
 const db = require('../models/db.js');
-
+// test pr - delete this comment //
 const controller = {};
 
 controller.searchPark = async (req, res, next) => {
@@ -41,7 +41,8 @@ controller.signupUser = async (req, res, next) => {
     // const query = {
     //   text: `INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ($1, $2, $3, $4)`,
     //   values: [firstname, lastname, email, password]
-    // };
+    // };\
+    console.log(req.body);
     const query = `INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ('${firstname}', '${lastname}', '${email}', '${password}')`;
     const newUser = await db.query(query);
     // console.log(res.locals.newUser);
@@ -54,7 +55,8 @@ controller.signupUser = async (req, res, next) => {
     res.locals.newUser = newUser;
     next();
   } catch (err) {
-    res.sendStatus(400).json(err);
+    console.log(err);
+    next(err);
   }
 };
 
