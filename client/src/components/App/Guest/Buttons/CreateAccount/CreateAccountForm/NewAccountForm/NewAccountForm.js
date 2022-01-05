@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 export default function NewAccountForm() {
-  const history = useNavigate();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const navigate = useNavigate();
+  const [firstname, setfirstname] = useState('');
+  const [lastname, setlastname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const addUser = async () => {
+    console.log('in fetch function')
     try {
       const res = await fetch('http://localhost:3000/users/new', {
         method: 'POST',
@@ -15,13 +16,14 @@ export default function NewAccountForm() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          firstName,
-          lastName,
+          firstname,
+          lastname,
           email,
           password,
         }),
       });
       if (res.status !== 200) throw new Error(res.status);
+      console.log(res); 
       return res;
     } catch (error) {
       throw new Error(
@@ -31,9 +33,11 @@ export default function NewAccountForm() {
   };
 
   const handleSubmit = (e) => {
+    console.log('in handle submit')
     e.preventDefault();
-    addUser({ firstName, lastName, email, password });
-    history.push('/dashboard');
+    console.log(e)
+    addUser({ firstname, lastname, email, password });
+    navigate('/dashboard');
   };
 
   return (
@@ -58,31 +62,31 @@ export default function NewAccountForm() {
             />
           </div>
           <div>
-            <label htmlFor='firstName' className='sr-only'>
+            <label htmlFor='firstname' className='sr-only'>
               First Name
             </label>
             <input
-              id='firstName'
+              id='firstname'
               type='text'
               required
               className='appearance-none rounded-none relative block w-full px-3 py-2 border dark:bg-gray-700 border-gray-300 dark:border-gray-600 dark:placeholder-gray-500 placeholder-gray-500 dark:text-gray-100 text-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm'
               placeholder='First name'
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={firstname}
+              onChange={(e) => setfirstname(e.target.value)}
             />
           </div>
           <div>
-            <label htmlFor='lastName' className='sr-only'>
+            <label htmlFor='lastname' className='sr-only'>
               Last Name
             </label>
             <input
-              id='lastName'
+              id='lastname'
               type='text'
               required
               className='appearance-none rounded-none relative block w-full px-3 py-2 border dark:bg-gray-700 border-gray-300 dark:border-gray-600 dark:placeholder-gray-500 placeholder-gray-500 dark:text-gray-100 text-gray-700 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 focus:z-10 sm:text-sm'
               placeholder='Last name'
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={lastname}
+              onChange={(e) => setlastname(e.target.value)}
             />
           </div>
           <div>
@@ -124,9 +128,10 @@ export default function NewAccountForm() {
         {/* </div> */}
 
         <div>
-          {email && firstName && lastName && password ? (
+          {email && firstname && lastname && password ? (
             <Link
               to='/dashboard'
+              onClick = {(e) => handleSubmit(e)}
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
             >
               Submit

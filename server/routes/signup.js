@@ -3,7 +3,7 @@ const router = express.Router();
 
 const controller = require('../controllers/controller.js')
 
-router.get('/',controller.signupUser, async (req, res) => {
+router.post('/',controller.signupUser, async (req, res) => {
     console.log('in signup.js router')
     res.status(200).json({user: res.locals.newUser})
 });

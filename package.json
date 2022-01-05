@@ -9,7 +9,8 @@
     "build-prod": "cross-env NODE_ENV=production && webpack --mode production",
     "client": "cross-env NODE_ENV=development && webpack serve --hot --mode development",
     "server": "nodemon server/server.js",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "test": "jest" 
   },
   "dependencies": {
     "@babel/runtime": "^7.16.5",
@@ -48,6 +49,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.4.7",
     "node-sass": "^7.0.1",
     "nodemon": "^2.0.15",
     "postcss-loader": "^6.2.1",
