@@ -11,9 +11,9 @@ router.post('/', controller.loginUser, controller.checkPassword, (req, res) => {
   // If the client can be authenticated using the email/password combination,
   // respond with a JSON object with properties: isloggedIn: 'true', id: res.locals.id
   if (res.locals.clearance === true) {
-    res.status(200).json({ isloggedIn: true, id: res.locals.id });
+    res.status(200).json({ isLoggedIn: true, id: res.locals.id });
   } else {
-    res.json({ isloggedIn: false });
+    res.json({ isLoggedIn: false });
   }
 });
 
