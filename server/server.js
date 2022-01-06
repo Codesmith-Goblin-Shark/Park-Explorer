@@ -29,6 +29,7 @@ const myParksRouter = require('./routes/myparks');
 const profileRouter = require('./routes/profile');
 // const parkInfoRouter = require('./routes/parkinfo');
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -38,7 +39,6 @@ app.use('/users/new', signupRouter);
 app.use('/myparks', myParksRouter);
 app.use('/api/users', profileRouter);
 // app.use('/parks/:id', parkInfoRouter);
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.render('home')
@@ -82,12 +82,12 @@ app.use((err, req, res, next) => {
     status: 500,
     message: { err: 'An error occurred' },
   };
-
+  console.log(err);
   const errorObj = Object.assign({}, defaultErr, err);
   console.log(errorObj);
   // should the method be send or json here like the commented out below
   // res.status(errorObj.status).json(errorObj.message);
-  return res.status(errorObj.status).send(errorObj.message);
+  return res.status(errorObj.status).json(errorObj.message);
 });
 
 app.listen(PORT, () =>

@@ -17,6 +17,7 @@ export default function Dashboard() {
         const nationalParks = data.filter((park) =>
           park.designation.includes('National Park')
         );
+        console.log(nationalParks);
         if (!allParksRef.current.length)
           allParksRef.current = [...nationalParks];
         setParks(nationalParks);

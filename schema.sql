@@ -34,6 +34,13 @@ CREATE TABLE public.states (
   state_abbr VARCHAR(2) UNIQUE NOT NULL
 );
 
+CREATE TABLE public.favorites (
+  id SERIAL PRIMARY KEY,
+  park_name VARCHAR NOT NULL,
+  user_id INTEGER NOT NULL,
+  favorite BOOLEAN NOT NULL
+);
+
 -- // not using below table since we have assumed (non realistically) that each park only has 1 state
 -- CREATE TABLE public.parks_in_states (
 --   id SERIAL PRIMARY KEY,
