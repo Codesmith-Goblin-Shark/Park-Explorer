@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-export default function Search({handleClick, search, setSearch }) {
+
+export default function Search({ handleClick, search, setSearch }) {
   const [state, setState] = useState('');
 
   // const handleClick = (e) => {

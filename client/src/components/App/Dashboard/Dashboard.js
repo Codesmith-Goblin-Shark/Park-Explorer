@@ -14,6 +14,7 @@ export default function Dashboard() {
         const res = await fetch(url);
         // how is this .json method accessible when it isn't visible on the response object🤔😵
         const { data } = await res.json();
+        console.log(data);
         const nationalParks = data.filter((park) =>
           park.designation.includes('National Park')
         );
@@ -66,7 +67,7 @@ export default function Dashboard() {
     resParks.forEach((resPark) => {
       hash[resPark.image] = resPark['image'];
       hash[resPark.park_name] = resPark['park_name'];
-      hash[resPark.latitutde] = resPark['latitutde']; // shoutout "latititde spelling in our db"
+      hash[resPark.latitude] = resPark['latitude']; // shoutout "latititde spelling in our db"
     });
     return parks.filter(
       (park) =>
