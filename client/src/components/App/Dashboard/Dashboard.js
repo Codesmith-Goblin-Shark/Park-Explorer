@@ -11,7 +11,6 @@ export default function Dashboard() {
   let [favs, setFavs] = useState([]);
   const allParksRef = useRef([]);
   const { state } = useLocation(); //state.userID for userID
-  console.log('state is: ', state)
 
   const getFavs = async () => {
     try {
@@ -21,11 +20,10 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userID: 1,
+          userID: state.userID,
         })
       }).then((res) => res.json())
       .then((res) => {
-        console.log('res is: ', res);
         setFavs(favs = res);
       });
     } catch (err) {
@@ -42,7 +40,6 @@ export default function Dashboard() {
         const res = await fetch(url);
         // how is this .json method accessible when it isn't visible on the response object🤔😵
         const { data } = await res.json();
-        console.log('allParksRef', allParksRef)
         const nationalParks = data.filter((park) =>
           park.designation.includes('National Park')
         );
@@ -61,14 +58,13 @@ export default function Dashboard() {
   //fetch all favorites for logged in account
   //store in array, have parkName check parkName against this array to determine if heartStatus
 
-  const getPark = async () => {
-    console.log('inside of get park')
+  const getPark = async (park) => {
     try {
       //shouldn't we be fetching from the api???
       //as of this point we need a case sensitive search
       
       const res = await fetch(
-        `http://localhost:3000/myparks/${search.toLowerCase()}`,
+        `http://localhost:3000/myparks/${park.toLowerCase()}`,
         {
           method: 'GET',
           headers: {
@@ -79,10 +75,8 @@ export default function Dashboard() {
       const data = await res.json();
       if (data.err) setParks(allParksRef.current); // if error getting data, just reset searchbar and dont update state
       if (res.status !== 200) throw new Error(res.status);
-      console.log('success fetching in getPark() ', data )
       return data;
     } catch (error) {
-      console.log('error fetching in get parkPark()')
       setParks(allParksRef.current);
       // throw new Error(
       //   `There was an issue fetching the search query from the database. ${error}`
@@ -94,36 +88,32 @@ export default function Dashboard() {
   //in Search.js
   const handleClick = async () => {
     if(search === 'favorites'){
-      console.log('searched favorites')
       const responseArray = []
-      console.log(favs)
 
       console.log('favs: ', favs)
       for(const favorite of favs){
-        console.log('favorite name',favorite.park_name.split(' ')[0])
+        if(favorite.park_name.split(' ')[0][0] === 'H'){
+          continue
+        }
+        console.log('favoriteparkname',(favorite.park_name.split(' ')[0] === 'Joshua'))
         const res = await getPark(favorite.park_name.split(' ')[0]);
         responseArray.push(res)
       }
-      console.log('response Array: ',responseArray)
-
       let newParks = []
       if (responseArray.length == 0) {
         setParks(allParksRef.current);
       } else {
-        for(const favorite of responseArray){
-          newParks = newParks.concat(convertDbResponseToAPIFormat(favorite))
-
+        for(let i = 0; i < responseArray.length; i++){
+          newParks = newParks.concat(convertDbResponseToAPIFormat(responseArray[i].parks))
         }
-        console.log('newParks ',  newParks)
         setParks(newParks);
       }
     }else{
-      const res = await getPark();
-    
+      const res = await getPark(search);
+      
       if (res === undefined) {
         setParks(allParksRef.current);
       } else {
-        console.log('setting new parks')
         const newParks = convertDbResponseToAPIFormat(res.parks);
         setParks(newParks);
       }
@@ -134,7 +124,6 @@ export default function Dashboard() {
 
   const convertDbResponseToAPIFormat = (resParks) => {
     const hash = {};
-    console.log('this is resParks', resParks)
     resParks.forEach((resPark) => {
       hash[resPark.image] = resPark['image'];
       hash[resPark.park_name] = resPark['park_name'];
