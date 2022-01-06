@@ -9,6 +9,8 @@ export default function SignInForm() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.log(isLoggedIn);
   const getUser = async () => {
+    console.log('get user fired');
+
     try {
       const res = await fetch('/login', {
         method: 'POST',
@@ -23,9 +25,7 @@ export default function SignInForm() {
       if (res.status !== 200) throw new Error(res.status);
       return res;
     } catch (error) {
-      throw new Error(
-        `There was an issue adding the member to the database. ${error}`
-      );
+      throw new Error(`There was an issue adding the member to the database. ${error}`);
     }
   };
 
