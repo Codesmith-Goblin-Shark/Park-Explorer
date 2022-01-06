@@ -17,6 +17,16 @@ controller.searchPark = async (req, res, next) => {
     // SELECT parks.park_name, parks.state_abbr, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='Maine'
     const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_abbr)='${park}' OR (states.state_abbr)='${park}'`;
     const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(parks.park_name) LIKE'%${park}%' OR (parks.park_name)='%${park}%'`;
+
+    // const favoritesQuery = `SELECT park_name FROM favorites
+    // WHERE user_id = '${userID}'
+    // AND favorite = 'true'`;
+
+    /* if (park == 'favorites') {
+      let favsArr = await db.query(favoritesQuery);
+      .then((data) => data.json())
+    } */
+
     let result = await db.query(queryOne);
     if (result.rows.length === 0) {
       result = await db.query(queryTwo);
@@ -290,6 +300,35 @@ controller.addFav = async (req, res, next) => {
     });
   }
 };
+
+controller.getFavs = async (req, res, next) => {
+  console.log('getFavs fired');
+  try {
+    const { userID } = req.body;
+    const findQuery = `
+      SELECT * FROM favorites
+      WHERE user_id = '${userID}'
+      AND favorite = 'true';`;
+    res.locals.results = await db.query(findQuery);
+    if (res.locals.results.rows.length >= 0) {
+      return next();
+    }else {
+      return next({
+        log: 'findFav middleware failed',
+        message: { err: 'User or park not found' },
+      });
+    }
+  } catch (err) {
+    console.log('findFav err fired');
+    // console.log(err)
+    // res.sendStatus(400).json(err);
+    return next({
+      log: 'findFav middleware failed',
+      status: 400,
+      message: { err: `User or park not found: ${err}` },
+    });
+  }
+}
 
 // DELETE FAV PARK FUNCTION (needs work) //
 controller.deleteFav = async (req, res, next) => {

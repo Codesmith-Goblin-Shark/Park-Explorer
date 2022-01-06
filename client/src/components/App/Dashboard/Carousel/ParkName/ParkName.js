@@ -1,18 +1,34 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
-export default function ParkName({ park }) {
+export default function ParkName({ park, favs, userID }) {
   const heartOutline = 'https://www.clipartmax.com/png/full/201-2012290_heart-outline-vector-heart-clipart-coloring.png';
   const heartFilled = 'https://cdn.kapwing.com/video_image-Bz5ouo4Jn.jpg';
-
+  let [heartStatus, changeHeart] = useState(heartOutline);
+  // let [isFav, changeHeart] = useState('');
+  
   useEffect(() => {
     //check current favorite status in db with title
     //may have to move this to where title/pictures are initially fetched and stored in state
     //if so, just pull from state here
     //display corresponding heart based on true/false status of favorite
-  }, [])
 
-  let [heartStatus, changeHeart] = useState(heartOutline);
+    //loop thru favs, see if park.fullName is present, if so make heart filled
+    console.log(favs);
+    for (let i = 0; i < favs.length; i++) {
+      const name = favs[i].park_name;
+      if(name == park.full_name){
+        console.log(true);
+        park.fav = true;
+      }
+    }
+    
+    if(park.fav){
+      changeHeart(heartStatus = heartFilled);
+    }else{
+      changeHeart(heartStatus = heartOutline);
+    } 
+  })
 
   function clickHeart(){
     // changeHeart(heartStatus = (heartStatus == heartOutline) ? heartFilled : heartOutline);
@@ -23,6 +39,7 @@ export default function ParkName({ park }) {
 
     if(heartStatus == heartOutline){ //if not a fav
       changeHeart(heartStatus = heartFilled);
+      park.fav = true;
       try {
         fetch('http://localhost:3000/api/users/addFav', {
           method: 'POST',
@@ -30,16 +47,20 @@ export default function ParkName({ park }) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userID: 1,
+            userID: userID,
             parkName: park.fullName
           })
-        }).then((res) => res.json());
+        }).then((res) => res.json())
+        .then((res) => {
+          park.fav = res;
+        });
       } catch (err) {
         console.log(err);
         throw new Error('Adding favorite failed: ', err);
       }
     }else{ //if already a fav
       changeHeart(heartStatus = heartOutline);
+      park.fav = false;
       try {
         fetch('http://localhost:3000/api/users/deleteFav', {
           method: 'DELETE',
@@ -50,7 +71,10 @@ export default function ParkName({ park }) {
             userID: 1,
             parkName: park.fullName
           })
-        }).then((res) => res.json());
+        }).then((res) => res.json())
+        .then((res) => {
+          park.fav = res;
+        });
       } catch (err) {
         console.log(err);
         throw new Error('Deleting favorite failed: ', err);

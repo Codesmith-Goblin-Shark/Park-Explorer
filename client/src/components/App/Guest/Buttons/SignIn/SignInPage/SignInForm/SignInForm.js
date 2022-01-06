@@ -30,10 +30,11 @@ export default function SignInForm() {
         .then((data) => data.json())
         .then((res) => {
           console.log(res);
-          if (res.isLoggedIn) setisLoggedIn(true);
+          // if (res.isLoggedIn) setisLoggedIn(true);
           if (res.isLoggedIn) {
+            setisLoggedIn(true);
             window.alert('Successfully Signed In');
-            navigate('/dashboard');
+            navigate('/dashboard',{ state: { userID: res.id }});
           } else {
             setEmail('');
             setPassword('');
