@@ -8,9 +8,9 @@ router.post('/addFav', controller.addFav, async (req, res) => {
     res.status(200).json(res.locals.reply);
 });
 
-router.delete('/delete/:email/:park', controller.deleteFav, async (req, res) => {
+router.delete('/deleteFav', controller.deleteFav, async (req, res) => {
     console.log('in signup.js router')
-    res.status(200).json({deleted: res.locals.deleted})
+    res.status(200).json(res.locals.reply);
 });
 
 module.exports = router;

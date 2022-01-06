@@ -96,7 +96,6 @@ controller.addFav = async (req, res, next) => {
     //find all matches in favorites table
     //if favorite column is false change to true
     //if no results, add favorite
-    console.log('addFav fired');
     const {userID, parkName} = req.body;
     const findQuery = `
       SELECT * FROM favorites
@@ -163,33 +162,74 @@ controller.addFav = async (req, res, next) => {
 };
 
 controller.deleteFav = async (req, res, next) => {
+  console.log('deleteFav fired');
   try {
-    const park = req.params.park;
-    const email = req.params.email;
-    const queryOne = `SELECT users.id FROM users WHERE email='${email}'`;
-    // const queryTwo = `SELECT parks.id, parks.park_name FROM parks WHERE park_name='${park}'`;
-    const queryTwo = `SELECT parks.park_name FROM parks WHERE park_name='${park}'`;
-
-    const resultOne = await db.query(queryOne);
-    const resultTwo = await db.query(queryTwo);
-
-    // const queryThree = `INSERT INTO user_parks (user_id, parks_id) VALUES('${resultOne.rows[0].id}', '${resultTwo.rows[0].id}')`;
-    const queryThree = `DELETE FROM user_parks WHERE user_id='${resultOne.rows[0].id}' AND park_name='${resultTwo.rows[0].park_name}'`;
-
-    const resultThree = await db.query(queryThree);
-    // console.log(res.locals.newUser);
-    // if (!newUser.command) {
-    //   return next({
-    //     log: 'signupUser middleware failed',
-    //     message: { err: 'Error signing up for a new account' },
-    //   });
-    // }
-    res.locals.deleted = resultThree;
-    next();
+    const {userID, parkName} = req.body;
+    const findQuery = `
+      SELECT * FROM favorites
+      WHERE user_id = '${userID}'
+      AND park_name = '${parkName}';`;
+    const insertQuery = `
+      INSERT INTO public.favorites(user_id, park_name, favorite) 
+      VALUES ('${userID}', '${parkName}', 'false')
+      RETURNING favorite;`
+    const changeQuery = `
+      UPDATE favorites
+      SET favorite = 'false'
+      WHERE user_id = '${userID}'
+      AND park_name = '${parkName}'
+      RETURNING favorite;`
+    res.locals.results = await db.query(findQuery);
+    if(res.locals.results.rows.length > 0){
+      res.locals.reply = await db.query(changeQuery);
+      return next();
+    }else if (res.locals.results.rows == 0){
+      res.locals.reply = await db.query(insertQuery);
+      return next();
+    }else {
+      return next({
+        log: 'deleteFav middleware failed',
+        message: { err: 'User or park not found' },
+      });
+    }
+  
   } catch (err) {
-    console.log('deletefav err fired');
-    res.sendStatus(400).json(err);
+    console.log('deleteFav err fired');
+    // console.log(err)
+    // res.sendStatus(400).json(err);
+    return next({
+      log: 'deleteFav middleware failed',
+      status: 400,
+      message: { err: `User or park not found: ${err}` },
+    });
   }
+  // try {
+  //   const park = req.params.park;
+  //   const email = req.params.email;
+  //   const queryOne = `SELECT users.id FROM users WHERE email='${email}'`;
+  //   // const queryTwo = `SELECT parks.id, parks.park_name FROM parks WHERE park_name='${park}'`;
+  //   const queryTwo = `SELECT parks.park_name FROM parks WHERE park_name='${park}'`;
+
+  //   const resultOne = await db.query(queryOne);
+  //   const resultTwo = await db.query(queryTwo);
+
+  //   // const queryThree = `INSERT INTO user_parks (user_id, parks_id) VALUES('${resultOne.rows[0].id}', '${resultTwo.rows[0].id}')`;
+  //   const queryThree = `DELETE FROM user_parks WHERE user_id='${resultOne.rows[0].id}' AND park_name='${resultTwo.rows[0].park_name}'`;
+
+  //   const resultThree = await db.query(queryThree);
+  //   // console.log(res.locals.newUser);
+  //   // if (!newUser.command) {
+  //   //   return next({
+  //   //     log: 'signupUser middleware failed',
+  //   //     message: { err: 'Error signing up for a new account' },
+  //   //   });
+  //   // }
+  //   res.locals.deleted = resultThree;
+  //   next();
+  // } catch (err) {
+  //   console.log('deletefav err fired');
+  //   res.sendStatus(400).json(err);
+  // }
 };
 
 module.exports = controller;
