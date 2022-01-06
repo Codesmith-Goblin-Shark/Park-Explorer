@@ -9,6 +9,7 @@ import CreateAccountForm from './components/App/Guest/Buttons/CreateAccount/Crea
 import Dashboard from './components/App/Dashboard/Dashboard';
 import SignInPage from './components/App/Guest/Buttons/SignIn/SignInPage/SignInPage';
 import isLoggedInContext from './components/Context/isLoggedInContext';
+import MoreInfoPage from './components/MoreInfoPage/MoreInfoPage';
 
 export default function AppRouter() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,6 +28,7 @@ export default function AppRouter() {
                 <Route path='/new+user' element={<CreateAccountForm />} />
                 <Route path='/sign+in' element={<SignInPage />} />
                 <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/more-info' element={<MoreInfoPage/>}/>
               </Routes>
             </Background>
           </ThemeProvider>

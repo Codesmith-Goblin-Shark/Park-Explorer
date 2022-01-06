@@ -19,6 +19,7 @@ export default function Dashboard() {
         const nationalParks = data.filter((park) =>
           park.designation.includes('National Park')
         );
+        console.log(nationalParks);
         if (!allParksRef.current.length)
           allParksRef.current = [...nationalParks];
         setParks(nationalParks);
@@ -88,7 +89,7 @@ export default function Dashboard() {
   return (
     <>
       <div className='flex-grow flex bg-gray-50 dark:bg-gray-800'>
-        <div className='grow mx-60 mb-60 mt-15 py-12 px-8 sm:px-10 lg:py-18 lg:px-8 lg:items-center lg:justify-between'>
+        <div className='grow mx-60 mt-15 py-12 px-8 sm:px-10 lg:py-18 lg:px-8 lg:items-center lg:justify-between'>
           <Search
             handleClick={handleClick}
             search={search}

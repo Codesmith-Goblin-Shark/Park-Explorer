@@ -1,5 +1,5 @@
 const db = require('../models/db.js');
-
+// test pr - delete this comment //
 const controller = {};
 
 controller.searchPark = async (req, res, next) => {
@@ -30,7 +30,8 @@ controller.searchPark = async (req, res, next) => {
     res.locals.park = result.rows;
     next();
   } catch (err) {
-    res.status(400).json(err, 'this is where i\'m at');
+    console.log('searchpark error');
+    res.sendStatus(400).json(err);
   }
 };
 
@@ -43,7 +44,7 @@ controller.signupUser = async (req, res, next) => {
     //   text: `INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ($1, $2, $3, $4)`,
     //   values: [firstname, lastname, email, password]
     // };\
-    console.log(req.body)
+    console.log(req.body);
     const query = `INSERT INTO users (firstname, lastname, email, encrypted_password) VALUES ('${firstname}', '${lastname}', '${email}', '${password}')`;
     const newUser = await db.query(query);
     // console.log(res.locals.newUser);
@@ -56,7 +57,7 @@ controller.signupUser = async (req, res, next) => {
     res.locals.newUser = newUser;
     next();
   } catch (err) {
-    console.log(err)
+    console.log(err);
     next(err);
   }
 };
@@ -90,7 +91,43 @@ controller.loginRouter = async (req, res, next) => {
 };
 
 controller.addFav = async (req, res, next) => {
+  console.log('addFav fired');
   try {
+    //take user id and park name from request
+    //find all matches in favorites table
+    //if favorite column is false change to true
+    //if no results, add favorite
+    console.log('addFav fired');
+    const {userID, parkName} = req.body;
+    const findQuery = `
+      SELECT * FROM favorites
+      WHERE user_id = '${userID}'
+      AND park_name = '${parkName}';`;
+    const insertQuery = `
+      INSERT INTO public.favorites(user_id, park_name, favorite) 
+      VALUES ('${userID}', '${parkName}', 'true')
+      RETURNING favorite;`
+    const changeQuery = `
+      UPDATE favorites
+      SET favorite = 'true'
+      WHERE user_id = '${userID}'
+      AND park_name = '${parkName}'
+      RETURNING favorite;`
+    res.locals.results = await db.query(findQuery);
+    if(res.locals.results.rows.length > 0){
+      res.locals.reply = await db.query(changeQuery);
+      return next();
+    }else if (res.locals.results.rows == 0){
+      res.locals.reply = await db.query(insertQuery);
+      return next();
+    }else {
+      return next({
+        log: 'addFav middleware failed',
+        message: { err: 'User or park not found' },
+      });
+    }
+
+    /*
     const park = req.params.park;
     const email = req.params.email;
     const queryOne = `SELECT users.id FROM users WHERE email='${email}'`;
@@ -113,8 +150,16 @@ controller.addFav = async (req, res, next) => {
     // }
     res.locals.fav = resultThree;
     next();
+    */
   } catch (err) {
-    res.sendStatus(400).json(err);
+    console.log('addFav err fired');
+    // console.log(err)
+    // res.sendStatus(400).json(err);
+    return next({
+      log: 'addFav middleware failed',
+      status: 400,
+      message: { err: `User or park not found: ${err}` },
+    });
   }
 };
 
@@ -143,6 +188,7 @@ controller.deleteFav = async (req, res, next) => {
     res.locals.deleted = resultThree;
     next();
   } catch (err) {
+    console.log('deletefav err fired');
     res.sendStatus(400).json(err);
   }
 };

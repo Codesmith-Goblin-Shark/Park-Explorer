@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import MoreInfoButton from '../../../MoreInfoPage/MoreInfoButton';
 import ParkDetails from './ParkDetails/ParkDetails';
 import ParkName from './ParkName/ParkName';
 // images must be an array of urls , if using Next JS this could something like
@@ -8,6 +9,7 @@ export default function Carousel({ data }) {
   const [currentImage, setCurrentImage] = useState(0);
   const [parkDetails, setParkDetails] = useState(data[0]);
   const images = data.map((el) => el.images[0].url);  
+  console.log(parkDetails);
 
   useEffect(() => {
     // only update state once in a child component (carousel) when that state is based on props from a parent component (dashboard's fetch to the API), useEffect is the key with the data as a dependency
@@ -128,6 +130,7 @@ export default function Carousel({ data }) {
         </div>
 
         {parkDetails && <ParkDetails park={parkDetails} />}
+        <MoreInfoButton parkDetails={parkDetails}/>
       </div>
     </div>
   );

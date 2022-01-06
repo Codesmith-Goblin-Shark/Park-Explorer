@@ -4,8 +4,59 @@
 
 html {
   background-color: rgb(55 65 81 / var(--tw-text-opacity));
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+.img-text-container {
+  text-align:center;
+  width: 100%;
+  height: 350px;
+  /* bottom: 0%; */
+  /* left: 20%; */
+  position: absolute;
+}
+.flex-container{
+  display: flex;
+  justify-content: center;
+}
+.description-div{
+  width: 700px;
+  display: flex;
+  margin:50px;
+  flex-direction: column;
+  align-items: center;
+}
+.text-div{
+  width: 600px;
+}
+.head-text{
+  /* font-family: "brandon-grotesque",Helvetica,Arial,"Nimbus Sans L",sans-serif; */
+  font-weight: 500;
+  font-size: 3rem;
+  color: #d97706;
+}
+.body-text{
+  font-weight: 300;
+  font-size: 20px;
+  color: white;
 
+}
+.text-over-img {
+  position: absolute;
+  font-size: 6rem;
+  line-height: 2.5rem;
+  font-weight: 600;
+  z-index: 1;
+  color: white;
+  bottom: 30%;
+  left:12%
+}
+.img-container{
+  height: 350px;
+  width: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 0;
+}
 body {
   background-color: rgb(55 65 81 / var(--tw-text-opacity));
 }
