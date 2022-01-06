@@ -1,11 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import Search from './Search/Search';
 import Carousel from './Carousel/Carousel';
+
 
 export default function Dashboard() {
   const [parks, setParks] = useState([]);
   const [search, setSearch] = useState('');
+  let [favs, setFavs] = useState([]);
   const allParksRef = useRef([]);
+  const { state } = useLocation(); //state.userID for userID
+  console.log('state is: ', state)
+
+  const getFavs = async () => {
+    try {
+      fetch('http://localhost:3000/api/users/getFavs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userID: 1,
+        })
+      }).then((res) => res.json())
+      .then((res) => {
+        console.log('res is: ', res);
+        setFavs(favs = res);
+      });
+    } catch (err) {
+      console.log(err);
+      throw new Error('Getting favorites failed in dashboard: ', err);
+    }
+  }
+
   useEffect(() => {
     const fetchData = async (route) => {
       try {
@@ -25,13 +53,17 @@ export default function Dashboard() {
         console.log(`There was an error fetching the data at ${route}`, error);
       }
     };
+    
     fetchData('parks');
+    getFavs();
   }, []);
+
+  //fetch all favorites for logged in account
+  //store in array, have parkName check parkName against this array to determine if heartStatus
 
   const getPark = async () => {
     console.log('inside of get park')
     try {
-
       //shouldn't we be fetching from the api???
       //as of this point we need a case sensitive search
       
@@ -61,19 +93,42 @@ export default function Dashboard() {
   //this function doesn't take parameters but is being passed parameters
   //in Search.js
   const handleClick = async () => {
-    console.log('searched for: ' + search)
-    const res = await getPark();
+    if(search === 'favorites'){
+      console.log('searched favorites')
+      const responseArray = []
+      console.log(favs)
+
+      console.log('favs: ', favs)
+      for(const favorite of favs){
+        console.log('favorite name',favorite.park_name.split(' ')[0])
+        const res = await getPark(favorite.park_name.split(' ')[0]);
+        responseArray.push(res)
+      }
+      console.log('response Array: ',responseArray)
+
+      let newParks = []
+      if (responseArray.length == 0) {
+        setParks(allParksRef.current);
+      } else {
+        for(const favorite of responseArray){
+          newParks = newParks.concat(convertDbResponseToAPIFormat(favorite))
+
+        }
+        console.log('newParks ',  newParks)
+        setParks(newParks);
+      }
+    }else{
+      const res = await getPark();
     
-    if (res === undefined) {
-      console.log('res is undefined in handle click')
-      setParks(allParksRef.current);
-    } else {
-      console.log('setting new parks')
-      const newParks = convertDbResponseToAPIFormat(res.parks);
-      console.log('newParks: ', newParks)
-      setParks(newParks);
-      console.log('parks after setting: ', parks)
+      if (res === undefined) {
+        setParks(allParksRef.current);
+      } else {
+        console.log('setting new parks')
+        const newParks = convertDbResponseToAPIFormat(res.parks);
+        setParks(newParks);
+      }
     }
+   
     setSearch('');
   };
 
@@ -104,7 +159,7 @@ export default function Dashboard() {
           />
           <div className='w-full flex justify-center'>
             {(allParksRef.current.length || parks.length) && (
-               <Carousel data={parks.length ? parks : allParksRef.current} /> 
+               <Carousel data={parks.length ? parks : allParksRef.current} favs={favs} userID={state.userID}/> 
             )}
           </div>
         </div>

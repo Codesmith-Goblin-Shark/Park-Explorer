@@ -5,7 +5,7 @@ import ParkName from './ParkName/ParkName';
 // images must be an array of urls , if using Next JS this could something like
 // const images = ['/img/img1.png', '/img/img2.png', '/img/img3.png']
 
-export default function Carousel({ data }) {
+export default function Carousel({ data, favs, userID }) {
   const [currentImage, setCurrentImage] = useState(0);
   const [parkDetails, setParkDetails] = useState(data[0]);
   const images = data.map((el) => el.images[0].url);  
@@ -103,7 +103,7 @@ export default function Carousel({ data }) {
         <span className='text-yellow-900 dark:text-yellow-50 table mx-auto my-4'>
           Park {currentImage + 1} of {totalImages}
         </span>
-        {parkDetails && <ParkName park={parkDetails} />}
+        {parkDetails && <ParkName park={parkDetails} favs={favs} userID={userID}/>}
 
         <div className='carousel mt-8 mb-8'>
           {sliderControl(true)}
