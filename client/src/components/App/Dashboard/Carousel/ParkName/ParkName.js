@@ -40,6 +40,21 @@ export default function ParkName({ park }) {
       }
     }else{ //if already a fav
       changeHeart(heartStatus = heartOutline);
+      try {
+        fetch('http://localhost:3000/api/users/deleteFav', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userID: 1,
+            parkName: park.fullName
+          })
+        }).then((res) => res.json());
+      } catch (err) {
+        console.log(err);
+        throw new Error('Deleting favorite failed: ', err);
+      }
     }
   }
   
