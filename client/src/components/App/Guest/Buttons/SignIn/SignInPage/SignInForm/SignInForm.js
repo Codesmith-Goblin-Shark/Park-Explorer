@@ -1,18 +1,23 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import isLoggedInContext from '../../../../../../Context/isLoggedInContext';
+
 export default function SignInForm() {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useContext(isLoggedInContext);
+  // const { isLoggedIn, setisLoggedIn } = useContext(isLoggedInContext);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  console.log(isLoggedIn);
+
+  console.log(`isLoggedIn = ${isLoggedIn}`);
+
   const getUser = async () => {
     console.log('get user fired');
 
+    let output;
+
     try {
-      const res = await fetch('/login', {
+      const res = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,34 +26,42 @@ export default function SignInForm() {
           email,
           password,
         }),
-      }).then((data) => data.json());
-      if (res.status !== 200) throw new Error(res.status);
-      return res;
+      })
+        .then((data) => data.json())
+        .then((res) => {
+          console.log(res);
+          if (res.isLoggedIn) setisLoggedIn(true);
+          if (res.isLoggedIn) {
+            window.alert('Successfully Signed In');
+            navigate('/dashboard');
+          } else {
+            setEmail('');
+            setPassword('');
+            window.alert('Incorrect Email adress / Password - Try again or Create an account');
+          }
+          output = res;
+          return output;
+        });
     } catch (error) {
-      throw new Error(`There was an issue adding the member to the database. ${error}`);
+      console.log(error);
+      throw new Error(`There was an issue getting the user from the database. ${error}`);
     }
+    // if (output.isLoggedIn) setIsLoggedIn(true);
   };
 
-  const handleSubmit = async () => {
-    // e.preventDefault();
-    const res = await getUser();
-    if (res.isLoggedIn) {
-      // history.push('/dashboard');
-      setIsLoggedIn(true);
-      // navigate('/dashboard');
-    }
-  };
-
-  const isUserValid = async () => {
-    try {
-      const res = await getUser();
-      console.log(res);
-      const data = await res.json();
-      console.log(data);
-    } catch (error) {
-      console.log('error in isUserValid: ', error);
-    }
-    // if (data)
+  const handleSubmit = async (e) => {
+    console.log('handleSubmit fired');
+    e.preventDefault();
+    console.log(e);
+    getUser({ email, password });
+    // const res = await getUser();
+    // console.log(res);
+    // if (res.isLoggedIn) {
+    //   console.log('condition is true');
+    //   // history.push('/dashboard');
+    //   // setIsLoggedIn(true);
+    //   // navigate('/dashboard');
+    // }
   };
 
   return (
@@ -90,37 +103,20 @@ export default function SignInForm() {
           </div>
         </div>
 
-        {/* <div className='flex items-center justify-between'> */}
-        {/* <div className='flex items-center'>
-            <input
-              id='remember-me'
-              name='remember-me'
-              type='checkbox'
-              className='h-4 w-4 text-yellow-600 focus:ring-yellow-500 dark:bg-gray-800 border-gray-300 rounded'
-            />
-            <label htmlFor='remember-me' className='ml-2 block text-sm dark:text-gray-100 text-gray-700'>
-              Remember me
-            </label>
-          </div> */}
-
-        {/* <div className='text-sm'>
-            <a href='#' className='font-medium text-yellow-600 hover:text-yellow-500'>
-              Forgot your password?
-            </a>
-          </div> */}
-        {/* </div> */}
-
         <div>
           {email && password ? (
             <Link
               to='/dashboard' // favorites ideally
+              // to='/sign+in'
+              // onClick={(e) => getUser(e)}
+              onClick={(e) => handleSubmit(e)}
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
             >
               Submit
             </Link>
           ) : (
             <button
-              onClick={() => handleSubmit()}
+              // onClick={() => handleSubmit()}
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
               // handlesubmit='(e) => e.preventDefault();'
             >

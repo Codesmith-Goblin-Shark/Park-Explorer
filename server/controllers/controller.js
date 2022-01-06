@@ -8,14 +8,15 @@ const SALT_WORK_FACTOR = 10;
 
 /* SEARCH PARKS MIDDLEWARE */
 controller.searchPark = async (req, res, next) => {
-  // console.log('controller is hit')
+  console.log('controller is hit', req.params.park)
+
   try {
     const park = req.params.park;
     // const {search} = req.body;
-    const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_name)='${park}' OR (states.state_name)='${park}'`;
+    const queryOne = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_name)='${park}' OR (states.state_name)='${park}'`;
     // SELECT parks.park_name, parks.state_abbr, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE states.state_name='Maine'
-    const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_abbr)='${park}' OR (states.state_abbr)='${park}'`;
-    const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitutde, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(parks.park_name) LIKE'%${park}%' OR (parks.park_name)='%${park}%'`;
+    const queryTwo = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(states.state_abbr)='${park}' OR (states.state_abbr)='${park}'`;
+    const queryThree = `SELECT parks.park_name, parks.state_abbr, parks.latitude, parks.longitude, parks.image, states.state_name FROM parks JOIN states on parks.state_abbr= states.state_abbr WHERE LOWER(parks.park_name) LIKE'%${park}%' OR (parks.park_name)='%${park}%'`;
     let result = await db.query(queryOne);
     if (result.rows.length === 0) {
       result = await db.query(queryTwo);
@@ -31,6 +32,7 @@ controller.searchPark = async (req, res, next) => {
         },
       });
     }
+    console.log('this is result', result.rows)
     res.locals.park = result.rows;
     next();
   } catch (err) {
@@ -78,11 +80,13 @@ controller.loginUser = async (req, res, next) => {
           });
         } else {
           // if the user exists, then get the associated password and name from the result object (if it exits)
+
           if (result.rows.length) {
             res.locals.foundUser = true;
-            res.locals.passWord = result.rows[0].encrypted_password;
+            res.locals.encrypted_password = result.rows[0].encrypted_password;
             res.locals.email = result.rows[0].email;
             res.locals.id = result.rows[0].id;
+
             return next();
           } else {
             // If we didn't hit an error and didn't find the user in the database, save fact that user wasn't found to a variable.
@@ -108,6 +112,7 @@ controller.checkPassword = async (req, res, next) => {
   const { password } = req.body;
   // Compare req.body.password to hashed password in the DB.
   bcrypt.compare(password, res.locals.encrypted_password, (err, response) => {
+    // console.log(password, res.locals.encrypted_password);
     if (response === true) {
       console.log('email and hashed pass match!');
       res.locals.clearance = true;
@@ -221,7 +226,7 @@ controller.addFav = async (req, res, next) => {
     //find all matches in favorites table
     //if favorite column is false change to true
     //if no results, add favorite
-    const {userID, parkName} = req.body;
+    const { userID, parkName } = req.body;
     const findQuery = `
       SELECT * FROM favorites
       WHERE user_id = '${userID}'
@@ -229,21 +234,21 @@ controller.addFav = async (req, res, next) => {
     const insertQuery = `
       INSERT INTO public.favorites(user_id, park_name, favorite) 
       VALUES ('${userID}', '${parkName}', 'true')
-      RETURNING favorite;`
+      RETURNING favorite;`;
     const changeQuery = `
       UPDATE favorites
       SET favorite = 'true'
       WHERE user_id = '${userID}'
       AND park_name = '${parkName}'
-      RETURNING favorite;`
+      RETURNING favorite;`;
     res.locals.results = await db.query(findQuery);
-    if(res.locals.results.rows.length > 0){
+    if (res.locals.results.rows.length > 0) {
       res.locals.reply = await db.query(changeQuery);
       return next();
-    }else if (res.locals.results.rows == 0){
+    } else if (res.locals.results.rows == 0) {
       res.locals.reply = await db.query(insertQuery);
       return next();
-    }else {
+    } else {
       return next({
         log: 'addFav middleware failed',
         message: { err: 'User or park not found' },
@@ -290,7 +295,7 @@ controller.addFav = async (req, res, next) => {
 controller.deleteFav = async (req, res, next) => {
   console.log('deleteFav fired');
   try {
-    const {userID, parkName} = req.body;
+    const { userID, parkName } = req.body;
     const findQuery = `
       SELECT * FROM favorites
       WHERE user_id = '${userID}'
@@ -298,27 +303,26 @@ controller.deleteFav = async (req, res, next) => {
     const insertQuery = `
       INSERT INTO public.favorites(user_id, park_name, favorite) 
       VALUES ('${userID}', '${parkName}', 'false')
-      RETURNING favorite;`
+      RETURNING favorite;`;
     const changeQuery = `
       UPDATE favorites
       SET favorite = 'false'
       WHERE user_id = '${userID}'
       AND park_name = '${parkName}'
-      RETURNING favorite;`
+      RETURNING favorite;`;
     res.locals.results = await db.query(findQuery);
-    if(res.locals.results.rows.length > 0){
+    if (res.locals.results.rows.length > 0) {
       res.locals.reply = await db.query(changeQuery);
       return next();
-    }else if (res.locals.results.rows == 0){
+    } else if (res.locals.results.rows == 0) {
       res.locals.reply = await db.query(insertQuery);
       return next();
-    }else {
+    } else {
       return next({
         log: 'deleteFav middleware failed',
         message: { err: 'User or park not found' },
       });
     }
-  
   } catch (err) {
     console.log('deleteFav err fired');
     // console.log(err)
