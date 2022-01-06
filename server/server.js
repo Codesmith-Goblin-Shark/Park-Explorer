@@ -75,12 +75,12 @@ app.use((err, req, res, next) => {
     status: 500,
     message: { err: 'An error occurred' },
   };
-
+  console.log(err);
   const errorObj = Object.assign({}, defaultErr, err);
   console.log(errorObj);
   // should the method be send or json here like the commented out below
   // res.status(errorObj.status).json(errorObj.message);
-  return res.status(errorObj.status).send(errorObj.message);
+  return res.status(errorObj.status).json(errorObj.message);
 });
 
 /* LISTEN PORT */
