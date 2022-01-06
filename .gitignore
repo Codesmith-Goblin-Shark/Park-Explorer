@@ -1,5 +1,6 @@
 dist/*
 !dist/index.html
+api_key/
 node_modules/
 *.env
 config/
