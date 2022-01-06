@@ -3,10 +3,6 @@ import React, { useState } from 'react';
 export default function Search({ handleClick, search, setSearch }) {
   const [state, setState] = useState('');
 
-  // const handleClick = (e) => {
-  //   getUser();
-  //   setState('');
-  // };
 
   return (
     <div>
@@ -27,10 +23,10 @@ export default function Search({ handleClick, search, setSearch }) {
           onChange={(e) => setSearch(e.target.value)}
         />
         <button
-          // onClick={() => handleClick(search)}
           onClick={(e) => {
             e.preventDefault();
-            setSearch(document.getElementById('parkInfo').value);
+            
+            // setSearch(document.getElementById('parkInfo').value);
             handleClick();
           }}
           className='flex-1 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
