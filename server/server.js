@@ -7,6 +7,7 @@ const passport = require('passport');
 const session = require('express-session');
 const db = require('./models/db.js');
 const cors = require('cors');
+const controller = require('./controllers/controller.js');
 
 const corsOptions = {
   origin: '*',
@@ -17,11 +18,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Passport config
 // require('../config/passport.js')(passport);
 
-// require routers
+/* REQUIRE ROUTERS */
 // const parksRouter = require('./routes/parks');
 const loginRouter = require('./routes/login');
 const signupRouter = require('./routes/signup');
@@ -29,22 +32,19 @@ const myParksRouter = require('./routes/myparks');
 const profileRouter = require('./routes/profile');
 // const parkInfoRouter = require('./routes/parkinfo');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// app.use('/', parksRouter);
+/* ROUTES */
 app.use('/login', loginRouter);
 app.use('/users/new', signupRouter);
 app.use('/myparks', myParksRouter);
 app.use('/api/users', profileRouter);
 // app.use('/parks/:id', parkInfoRouter);
 
+/* SERVE INDEX HTML */
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
-  // res.render('home')
 });
 
-//Express-session middleware
+/* EXPRESS-SESSION MIDDLEWARE */
 app.use(
   session({
     secret: 'keyboard cat',
@@ -55,27 +55,20 @@ app.use(
 
 app.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 
-app.get(
-  '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    res.redirect('/dashboard');
-  }
-);
+app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
+  res.redirect('/dashboard');
+});
 
-//Passport middleware
+/* PASSPORT MIDDLEWARE */
 app.use(passport.initialize());
 app.use(passport.session());
 
-// what is this one for?
-// app.get('/park', (req, res) => {
-//   res.json({park: res.locals.park})
-// })
-
+/* ALL OTHER ENDPOINTS */
 app.get('*', (req, res) => {
   res.sendStatus(404);
 });
 
+/* GLOBAL ERROR HANDLER */
 app.use((err, req, res, next) => {
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',
@@ -90,10 +83,7 @@ app.use((err, req, res, next) => {
   return res.status(errorObj.status).send(errorObj.message);
 });
 
-app.listen(PORT, () =>
-  console.log(
-    `Listening on port ${PORT}.\nMake sure the postgres server is running.`
-  )
-);
+/* LISTEN PORT */
+app.listen(PORT, () => console.log(`Listening on port ${PORT}.\nMake sure the postgres server is running.`));
 
 module.exports = app;
