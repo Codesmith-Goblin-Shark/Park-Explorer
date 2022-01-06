@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 export default function NewAccountForm() {
   const navigate = useNavigate();
   const [firstname, setfirstname] = useState('');
@@ -8,7 +9,10 @@ export default function NewAccountForm() {
   const [password, setPassword] = useState('');
 
   const addUser = async () => {
-    console.log('in fetch function')
+    console.log('in fetch function');
+
+    let output;
+
     try {
       const res = await fetch('http://localhost:3000/users/new', {
         method: 'POST',
@@ -21,23 +25,37 @@ export default function NewAccountForm() {
           email,
           password,
         }),
-      });
-      if (res.status !== 200) throw new Error(res.status);
-      console.log(res); 
-      return res;
+      })
+        .then((data) => data.json())
+        .then((res) => {
+          console.log(res);
+          if (res.created) {
+            window.alert('Successfully Created New Account');
+            navigate('/dashboard');
+          } else {
+            setfirstname('');
+            setlastname('');
+            setEmail('');
+            setPassword('');
+            window.alert('Email address already taken, please enter a valid one or Sign In');
+          }
+          output = res;
+          return output;
+        });
+      // if (res.status !== 200) throw new Error(res.status);
+      // console.log(res);
+      // return res;
     } catch (error) {
-      throw new Error(
-        `There was an issue adding the member to the database. ${error}`
-      );
+      throw new Error(`There was an issue adding the member to the database. ${error}`);
     }
   };
 
   const handleSubmit = (e) => {
-    console.log('in handle submit')
+    console.log('in handle submit');
     e.preventDefault();
-    console.log(e)
+    console.log(e);
     addUser({ firstname, lastname, email, password });
-    navigate('/dashboard');
+    // navigate('/dashboard');
   };
 
   return (
@@ -131,7 +149,7 @@ export default function NewAccountForm() {
           {email && firstname && lastname && password ? (
             <Link
               to='/dashboard'
-              onClick = {(e) => handleSubmit(e)}
+              onClick={(e) => handleSubmit(e)}
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
             >
               Submit
