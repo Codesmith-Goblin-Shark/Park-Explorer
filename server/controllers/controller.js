@@ -32,6 +32,7 @@ controller.searchPark = async (req, res, next) => {
         },
       });
     }
+    console.log('this is result', result.rows)
     res.locals.park = result.rows;
     next();
   } catch (err) {
