@@ -15,6 +15,7 @@ export default function Dashboard() {
         // how is this .json method accessible when it isn't visible on the response object🤔😵
         const { data } = await res.json();
         console.log(data);
+        console.log('allParksRef', allParksRef)
         const nationalParks = data.filter((park) =>
           park.designation.includes('National Park')
         );
@@ -29,7 +30,12 @@ export default function Dashboard() {
   }, []);
 
   const getPark = async () => {
+ console.log('inside of get park')
     try {
+
+      //shouldn't we be fetching from the api???
+      //as of this point we need a case sensitive search
+      
       const res = await fetch(
         `http://localhost:3000/myparks/${search.toLowerCase()}`,
         {
@@ -51,6 +57,8 @@ export default function Dashboard() {
     }
   };
 
+  //this function doesn't take parameters but is being passed parameters
+  //in Search.js
   const handleClick = async () => {
     const res = await getPark();
     if (res === undefined) {
